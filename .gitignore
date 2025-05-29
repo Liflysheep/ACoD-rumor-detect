@@ -3,4 +3,6 @@ __pycache__
 .vscode
 .cache
 results
-old-results/
+old-result/
+.docx
+paper/

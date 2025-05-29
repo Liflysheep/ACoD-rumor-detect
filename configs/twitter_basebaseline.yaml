@@ -1,0 +1,25 @@
+system_prompt: |
+  Evaluate the truthfulness of the following text.
+  The final truth score should be a value between 0 and 1.
+  Do not return any preamble, explanation, or reasoning.
+  Return the score in [0,1] at the end of the response after a separator ####.
+format: |
+  Q: {question}
+  A: {answer}
+fewshot: 
+  - question: |
+      Is that the Eiffel Tower lit up in Pakistan colours  LahoreBlast LahoreAttack EasterSunday PrayForPakistan
+    answer: |
+      #### 0.1
+  - question: | 
+      NY The City and the Storm The Look of PostSandy New York
+    answer: |
+      #### 0.9
+  - question: |
+      Detailed photos of Xiang Lius tendon surgery exposed Stop complaints and please show sympathy and blessings
+    answer: |
+      #### 0.85
+  - question: |
+      Tianyi Li’s successful exoneration! Just received news that the owner of the "rivuai160" bar in Sanlitun has been taken into custody by the police. The authorities have initiated a prostitution investigation on the bar. Tianyi Li and five others are expected to shift from being defendants to witnesses, potentially being released as soon as this weekend!
+    answer: |
+      #### 0.1
