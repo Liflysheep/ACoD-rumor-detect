@@ -6,6 +6,8 @@ import yaml
 from pydantic import BaseModel
 import numpy as np
 import pandas as pd
+import os
+import json
 
 
 class Example(BaseModel):
@@ -100,6 +102,7 @@ def sample_data(data, num_samples: int) -> List[Example]:
 def load_config(task: Literal["twitter", "weibo"], config: Literal["baseline", "cot", "cod","cod_ablation","basebaseline"]) -> Config:
     with open(f"./configs/{task}_{config}.yaml") as f:
         return Config.model_validate(yaml.safe_load(f))
+
 
 
 def compose_request(config: Config, shot: int, question: str) -> str:

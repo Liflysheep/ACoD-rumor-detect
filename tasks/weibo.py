@@ -16,7 +16,7 @@ class WeiboRumor(Task):
     def load_data(self) -> List[Example]:
         """加载推特谣言检测数据（简化版，假设数据格式正确）"""
         data_rows = []  # 用于存储所有数据的列表
-        
+        return_data = []        
         # 定义要处理的文件列表及其对应标签
         tweet_files = [
             ('test_nonrumor.txt', 1),
@@ -46,9 +46,12 @@ class WeiboRumor(Task):
                     'token_count': tokens[i],  
                 })
         df = pd.DataFrame(data_rows)
-        df = df[df['token_count'] >= 30]
+        df = df[df['token_count'] >= 4]
 
-        return sample_data(df, SAMPLE_SIZE)
+        for i in range(len(df)):
+            return_data.append(Example(question=str(df.iloc[i]['text']), answer=str(df.iloc[i]['label'])))
+        return return_data
+        # return sample_data(df, SAMPLE_SIZE)
 
 
     def extract_answer(self, raw_response: str) -> int:

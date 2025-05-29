@@ -15,6 +15,7 @@ class TwitterRumor(Task):
     def load_data(self) -> List[Example]:
         """加载推特谣言检测数据（简化版，假设数据格式正确）"""
         data_rows = [] 
+        return_data = []
         with (
             open("./data/twitter_lines.txt", "r", encoding="utf-8") as text_file,
             open("./data/twitter_label 0 for fake, 1 for true.txt", "r", encoding="utf-8") as label_file,
@@ -33,8 +34,10 @@ class TwitterRumor(Task):
                 data_rows.append(row)
         df = pd.DataFrame(data_rows)
         df = df[(df['token_count'] <= 100) & (df['token_count'] >= 4)]  # 正确写法
-
-        return sample_data(df, SAMPLE_SIZE)
+        for i in range(len(df)):
+            return_data.append(Example(question=str(df.iloc[i]['text']), answer=str(df.iloc[i]['label'])))
+        return return_data
+        # return sample_data(df, SAMPLE_SIZE)
 
     def extract_answer(self, raw_response: str) -> int:
             """提取并标准化模型输出结果（简化版）"""

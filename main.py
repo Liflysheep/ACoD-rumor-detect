@@ -7,9 +7,9 @@ os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
 os.environ["HF_DATASETS_CACHE"] = "./data_cache"
 
 # 实验参数配置
-TASK = ["weibo","twitter"]  # 任务名称
+TASK = ["weibo"]  # 任务名称
 MODEL = ["deepseek-v3"]  # 模型名称
-PROMPTS =["baseline","basebaseline"]  # 改为列表，测试多种提示策略
+PROMPTS =["baseline"]  # 改为列表，测试多种提示策略
 # PROMPTS = ["cot"]  # 改为列表，测试多种提示策略
 # URL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
 # API_KEY = "	sk-41c9010ff48d4c0b941f152cadc5c41a"
@@ -17,7 +17,7 @@ PROMPTS =["baseline","basebaseline"]  # 改为列表，测试多种提示策略
 # API_KEY = "sk-qefgglbcwnvvixmplmgyxshbeysskuynnzwavwcbbodmdhiq"
 URL = "https://api.deepseek.com/v1"
 API_KEY = "sk-8e4594ee04cd4473b99b6880190120f6"
-TEST_SET_SIZE = 200  # 测试集大小
+TEST_SET_SIZE = 4  # 测试集大小
 SHOTS = [2]  # 测试的shot数量范围
 
 
@@ -47,6 +47,7 @@ def run_experiments():
                         "--test-set-size", str(TEST_SET_SIZE),
                         "--url", URL,
                         "--api-key", API_KEY,
+                        "--if-log", "True"
                     ]
                     
                     try:

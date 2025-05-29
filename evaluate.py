@@ -51,8 +51,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--test-set-size",
         type=int,
-        default=None,
+        default=-1,
         help="Number of examples to be test, by default, if not specified, use all examples",
+    )
+    parser.add_argument(
+        "--if-log",
+        default=False,
+        help="Whether to log middle results, default is False",
     )
 
     args = parser.parse_args()
@@ -66,7 +71,7 @@ if __name__ == "__main__":
             raise ValueError("Invalid task")
 
     model = MODEL_MAPPING.get(args.model, args.model)
-    accuracy = task.evaluate(model, args.prompt, args.shot, args.test_set_size)
+    accuracy = task.evaluate(model, args.prompt, args.shot, args.test_set_size, args.if_log)
     results = [
         [
             "qs_token",
@@ -104,5 +109,5 @@ if __name__ == "__main__":
         else f"{args.task}-{model_name}-{args.prompt}"
     )
     with open(f"./results/{fname}.csv", "w", newline="") as f:
-        writer = csv.writer(f, delimiter="\t")  # 用制表符分隔，方便对齐
+        writer = csv.writer(f)  # 用制表符分隔，方便对齐
         writer.writerows(results)
