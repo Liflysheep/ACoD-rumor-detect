@@ -13,7 +13,6 @@ import os
 RANDOM_SEED = 42
 random.seed(RANDOM_SEED)
 
-LOG_DATA_PATH = "intermediate_data.jsonl"  # 使用 JSON Lines 文件
 
 class Task(ABC):
     def __init__(self, name: str, llm: LLMClient):
@@ -27,6 +26,7 @@ class Task(ABC):
         self.gt_log = []
         self.if_log = False
         self.num_log = []
+        self.load_path = None  # 用于加载状态的路径
 
     @abstractmethod
     def load_data(self) -> List[Example]:
@@ -71,10 +71,10 @@ class Task(ABC):
         """将单个结果追加到 JSON Lines 日志文件。"""
         try:
             # 使用 'a' 模式追加, 并确保每次写入后都换行
-            with open(LOG_DATA_PATH, 'a', encoding="utf-8") as f:
+            with open(self.load_path, 'a', encoding="utf-8") as f:
                 f.write(json.dumps(entry, ensure_ascii=False) + '\n')
         except IOError as e:
-            print(f"警告：无法追加到日志文件 {LOG_DATA_PATH}: {e}")
+            print(f"警告：无法追加到日志文件 {self.load_path}: {e}")
 
     def _load_state_from_jsonl(self):
         """从 JSON Lines 文件加载状态并重建日志。"""
@@ -90,7 +90,7 @@ class Task(ABC):
         self.num_log.clear()
 
         try:
-            with open(LOG_DATA_PATH, 'r', encoding="utf-8") as f:
+            with open(self.load_path, 'r', encoding="utf-8") as f:
                 for i, line in enumerate(f):
                     line = line.strip()
                     if not line: continue  # 跳过空行
@@ -111,7 +111,7 @@ class Task(ABC):
                         last_index = entry['num'] # 使用记录的编号作为索引
 
                     except (json.JSONDecodeError, KeyError) as e:
-                        print(f"警告：日志文件 {LOG_DATA_PATH} 第 {i+1} 行格式错误或不完整 ({e})。将从该行之前的位置恢复。")
+                        print(f"警告：日志文件 {self.load_path} 第 {i+1} 行格式错误或不完整 ({e})。将从该行之前的位置恢复。")
                         # 返回上一个有效状态
                         return correct, last_index
             return correct, last_index
@@ -123,8 +123,9 @@ class Task(ABC):
             return 0, 0
 
 
-    def evaluate(self, model: str, config: Literal["baseline", "cot", "cod", "cod_ablation", "basebaseline"], shot: int = None, test_set_size: int = -1, if_log: bool = False) -> float:
+    def evaluate(self, model: str, config: Literal["baseline", "cot", "cod", "cod_ablation", "basebaseline"], shot: int = None, test_set_size: int = -1, if_log: bool = False, load_path: str = None) -> float:
         self.if_log = if_log
+        self.load_path = load_path 
         correct = 0
         start_index = 0
 
@@ -140,16 +141,16 @@ class Task(ABC):
             return 0.0
 
         # 如果启用日志且文件存在，则加载中间结果
-        if self.if_log and os.path.exists(LOG_DATA_PATH):
-            print(f"检测到中间结果文件 {LOG_DATA_PATH}，正在加载...")
+        if self.if_log and os.path.exists(self.load_path):
+            print(f"检测到中间结果文件 {self.load_path}，正在加载...")
             correct, start_index = self._load_state_from_jsonl()
             if start_index > 0:
                  print(f"已成功加载 {start_index} 个结果，将从该位置继续评估。")
             
             if start_index >= total_examples:
                 print("评估已完成，正在清理并返回结果。")
-                if os.path.exists(LOG_DATA_PATH):
-                    os.remove(LOG_DATA_PATH)
+                if os.path.exists(self.load_path):
+                    os.remove(self.load_path)
                 return correct / total_examples
 
         # 循环处理测试集，从 start_index 开始
@@ -180,11 +181,11 @@ class Task(ABC):
                 self._append_log(log_entry)
 
         # 评估完成后，如果启用了日志，则删除中间文件
-        if self.if_log and os.path.exists(LOG_DATA_PATH):
+        if self.if_log and os.path.exists(self.load_path):
             try:
-                print(f"评估完成，正在删除中间结果文件 {LOG_DATA_PATH}...")
-                os.remove(LOG_DATA_PATH)
+                print(f"评估完成，正在删除中间结果文件 {self.load_path}...")
+                os.remove(self.load_path)
             except OSError as e:
-                print(f"警告：无法删除中间结果文件 {LOG_DATA_PATH}: {e}")
+                print(f"警告：无法删除中间结果文件 {self.load_path}: {e}")
 
         return correct / total_examples

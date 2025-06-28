@@ -7,19 +7,20 @@ os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
 os.environ["HF_DATASETS_CACHE"] = "./data_cache"
 
 # 实验参数配置
-TASK = ["weibo"]  # 任务名称
+TASK = ["twitter"]  # 任务名称
 MODEL = ["deepseek-v3"]  # 模型名称
-PROMPTS =["baseline"]  # 改为列表，测试多种提示策略
+PROMPTS =["cot"]  # 改为列表，测试多种提示策略
 # PROMPTS = ["cot"]  # 改为列表，测试多种提示策略
 # URL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
 # API_KEY = "	sk-41c9010ff48d4c0b941f152cadc5c41a"
 # URL = "https://api.siliconflow.cn/v1"
 # API_KEY = "sk-qefgglbcwnvvixmplmgyxshbeysskuynnzwavwcbbodmdhiq"
 URL = "https://api.deepseek.com/v1"
-API_KEY = "sk-8e4594ee04cd4473b99b6880190120f6"
-TEST_SET_SIZE = 4  # 测试集大小
+# API_KEY = "sk-8e4594ee04cd4473b99b6880190120f6" # 保密性低的key
+API_KEY = "sk-3f2561510dc44e3086ab0e980aa746fa" # Cot-rumor-detect
+TEST_SET_SIZE = -1  # 测试集大小
 SHOTS = [2]  # 测试的shot数量范围
-
+LOAD_PATH = "intermediate_data_deepseek.jsonl"  # 日志文件路径
 
 def run_experiments():
     """运行所有prompt和shot组合的实验"""
@@ -47,7 +48,8 @@ def run_experiments():
                         "--test-set-size", str(TEST_SET_SIZE),
                         "--url", URL,
                         "--api-key", API_KEY,
-                        "--if-log", "True"
+                        "--if-log", "True",
+                        "--load-path", LOAD_PATH
                     ]
                     
                     try:

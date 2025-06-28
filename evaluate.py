@@ -16,7 +16,7 @@ MODEL_MAPPING = {
     "deepseek-v3": "deepseek-chat",
     "qwen2-14b" : "qwen2.5-14b-instruct",
     "qwen3-32b" : "Qwen/Qwen3-32B",
-    "qwen2-32b" : "qwen2.5-32b-instruct",
+    "qwen2.5-32b" : "qwen2.5-32b-instruct",
     "qwen3-turbo" :"qwen-turbo-2025-04-28",
     "qwen2.5-3b" : "qwen2.5-3b-instruct"
 }
@@ -59,6 +59,11 @@ if __name__ == "__main__":
         default=False,
         help="Whether to log middle results, default is False",
     )
+    parser.add_argument(
+        "--load-path",
+        default=None,
+        help="Path to load previous results, if specified, will load from this path",
+    )
 
     args = parser.parse_args()
     llm_client = LLMClient(args.url, args.api_key)
@@ -71,7 +76,7 @@ if __name__ == "__main__":
             raise ValueError("Invalid task")
 
     model = MODEL_MAPPING.get(args.model, args.model)
-    accuracy = task.evaluate(model, args.prompt, args.shot, args.test_set_size, args.if_log)
+    accuracy = task.evaluate(model, args.prompt, args.shot, args.test_set_size, args.if_log, args.load_path)
     results = [
         [
             "qs_token",

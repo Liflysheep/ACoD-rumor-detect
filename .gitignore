@@ -4,6 +4,10 @@ __pycache__
 .cache
 results
 old-result/
-结果.docx
-证明CoD给出的推理是有用的例子.docx
+result/
+analysis/
+*.docx
 paper/
+result-old.xlsx
+test.ipynb
+intermediate_data_deepseek.jsonl
