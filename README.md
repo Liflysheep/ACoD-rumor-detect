@@ -1,4 +1,4 @@
-# Chain of Draft: Thinking Faster by Writing Less
+# Aspect-aware Chain-of-Draft Prompt for Fake News Detection
 [[Paper]]()
 
 The rapid dissemination of misinformation on social media platforms has underscored the urgent need for effective and interpretable fake news detection methods. While small language models (SLMs) like BERT have been extensively applied in this domain, they often struggle with reasoning and lack transparency in decision-making. Recently, large language models (LLMs) have demonstrated impressive reasoning capabilities when guided by prompting strategies such as Chain-of-Thought (CoT). However, CoT often suffers from inefficiency and excessive token usage, which hampers its practicality in real-world applications. 
