@@ -1,34 +1,25 @@
 # Chain of Draft: Thinking Faster by Writing Less
-[[Paper]](https://arxiv.org/abs/2502.18600)
+[[Paper]]()
 
-Large Language Models (LLMs) have demonstrated remarkable performance in solving complex reasoning tasks through mechanisms like Chain-of-Thought (CoT) prompting, which emphasizes verbose, step-by-step reasoning. 
-However, humans typically employ a more efficient strategy: drafting concise intermediate thoughts that capture only essential information. 
-In this work, we propose Chain of Draft (CoD), a novel paradigm inspired by human cognitive processes, where LLMs generate minimalistic yet informative intermediate reasoning outputs while solving tasks. 
-By reducing verbosity and focusing on critical insights, CoD matches or surpasses CoT in accuracy while using as little as only 7.6% of the tokens, significantly reducing cost and latency across various reasoning tasks.
+The rapid dissemination of misinformation on social media platforms has underscored the urgent need for effective and interpretable fake news detection methods. While small language models (SLMs) like BERT have been extensively applied in this domain, they often struggle with reasoning and lack transparency in decision-making. Recently, large language models (LLMs) have demonstrated impressive reasoning capabilities when guided by prompting strategies such as Chain-of-Thought (CoT). However, CoT often suffers from inefficiency and excessive token usage, which hampers its practicality in real-world applications. 
+In this paper, we explore an emerging prompting strategy—Chain-of-Draft (CoD)—and introduce an Aspect-aware Chain-of-Draft (ACoD) Prompt specifically designed for fake news detection. ACoD encourages LLMs to perform concise, aspect-specific reasoning based on three critical dimensions: source credibility, multiple confirmation, and evidence support. We evaluate ACoD against Standard Prompting, CoT, and aspect-aware variants using two widely-used datasets, Weibo21 (Chinese) and Twitter16 (English), and two state-of-the-art LLMs, Deepseek-v3 and Qwen2.5-32b. Experimental results reveal that ACoD not only improves detection accuracy but also significantly reduces token consumption and inference latency. Notably, we observe that CoT prompting can degrade performance in this domain, likely due to the noisy nature of long reasoning chains. In contrast, ACoD produces compact drafts that enhance interpretability while preserving efficiency. Our findings suggest that CoD-style prompting holds great promise for balancing accuracy, interpretability, and efficiency in LLM-based fake news detection.
 
 
 ## Usage
 To run evaluation:
 ```bash
 python evaluate.py \
-    --task gsm8k \      # Task to evaluate (options: gsm8k, date, sports, coin_flip)
-    --model gpt-4o \    # Model to be evaluated
+    --task twitter \      # Task to evaluate (options: twitter,weibo)
+    --model deepseek-v3 \    # Model to be evaluated
     --prompt cod \      # Prompting strategy (options: baseline, cod, cot)
-    --shot 5 \          # [Optional] Number of few-shot examples to include in the prompt (uses all available examples by default if omitted)
+    --shot 2 \          # [Optional] Number of few-shot examples to include in the prompt (uses all available examples by default if omitted)
     --url $BASE_URL \   # [Optional] Base URL for an OpenAI-compatible interface (e.g., locally hosted models)
     --api-key $KEY \    # [Optional] API key for model access (automatically loads from environment variables for Claude and OpenAI models if not provided)
 ```
 Currently, the script supports Claude models, OpenAI models, as well as any model that uses an OpenAI-compatible interface.
 The evaluation results will be stored under `./results/`.
+And our results are in the `result.xlsx`
 
 All prompts and fewshot examples are stored under `./configs/{task}-{prompt}.yaml`. 
 
 ## Citation
-```latex
-@article{xu2025cod,
-    title={Chain of Draft: Thinking Faster by Writing Less},
-    author={Xu, Silei and Xie, Wenhao and Zhao, Lingxiao and He, Pengcheng},
-    journal={arXiv preprint arXiv:2502.18600},
-    year={2025}
-}
-```
