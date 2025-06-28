@@ -18,6 +18,7 @@ python evaluate.py \
 ```
 Currently, the script supports Claude models, OpenAI models, as well as any model that uses an OpenAI-compatible interface.
 The evaluation results will be stored under `./results/`.
+And our results are in the `result.xlsx`
 
 All prompts and fewshot examples are stored under `./configs/{task}-{prompt}.yaml`. 
 
