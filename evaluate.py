@@ -45,7 +45,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--api-key",
-        default='sk-17UeXf8m7e61JOu9fIf8OD955YNtT1KW2wVl0E5zAgBW9W7v',
+        default=None,
         help="API key for model access, will use api keys in environment variables for openai and claude models.",
     )
     parser.add_argument(
