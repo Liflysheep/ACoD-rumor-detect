@@ -3,12 +3,12 @@ __pycache__
 .vscode
 .cache
 results
+main.py
+test.ipynb
 old-result/
 result/
 analysis/
 *.docx
 paper/
 result-old.xlsx
-test.ipynb
 intermediate_data_deepseek.jsonl
-main.py
